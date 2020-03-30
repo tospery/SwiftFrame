@@ -1,0 +1,6 @@
+framework module SwiftFrame {
+  umbrella header "SwiftFrame-umbrella.h"
+
+  export *
+  module * { export * }
+}

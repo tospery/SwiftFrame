@@ -1,0 +1,33 @@
+PODS:
+  - QMUIKit/QMUIComponents/QMUIButton (4.0.4):
+    - QMUIKit/QMUICore
+  - QMUIKit/QMUIComponents/QMUILabel (4.0.4):
+    - QMUIKit/QMUICore
+  - QMUIKit/QMUICore (4.0.4):
+    - QMUIKit/QMUILog
+    - QMUIKit/QMUIWeakObjectContainer
+  - QMUIKit/QMUILog (4.0.4)
+  - QMUIKit/QMUIWeakObjectContainer (4.0.4)
+  - SwiftFrame (1.0.0):
+    - QMUIKit/QMUIComponents/QMUIButton (= 4.0.4)
+    - QMUIKit/QMUIComponents/QMUILabel (= 4.0.4)
+    - QMUIKit/QMUICore (= 4.0.4)
+
+DEPENDENCIES:
+  - SwiftFrame (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - QMUIKit
+
+EXTERNAL SOURCES:
+  SwiftFrame:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  QMUIKit: 73899f707bdd51f44d16e10d11f224fb821fbe74
+  SwiftFrame: 0d3c362c684ace2bb3cba64f5f9b3a962c26e1cf
+
+PODFILE CHECKSUM: 8113fe91dd55562ce24606907d42886fa5f507fa
+
+COCOAPODS: 1.9.1
