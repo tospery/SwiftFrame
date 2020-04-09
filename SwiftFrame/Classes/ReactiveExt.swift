@@ -9,16 +9,16 @@ import UIKit
 import RxSwift
 import RxCocoa
 import QMUIKit
-// import Toast_Swift
+import Toast_Swift
 
 public extension Reactive where Base: UIView {
     
-//    var loading: Binder<Bool> {
-//        return Binder(self.base) { view, loading in
-//            view.isUserInteractionEnabled = !loading
-//            loading ? view.makeToastActivity(.center) : view.hideToastActivity()
-//        }
-//    }
+    var loading: Binder<Bool> {
+        return Binder(self.base) { view, loading in
+            view.isUserInteractionEnabled = !loading
+            loading ? view.makeToastActivity(.center) : view.hideToastActivity()
+        }
+    }
     
     var setNeedsLayout: Binder<Void> {
         return Binder(self.base) { view, _ in

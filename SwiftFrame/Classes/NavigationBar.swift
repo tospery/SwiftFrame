@@ -104,4 +104,14 @@ public class NavigationBar: UIView {
         return button
     }
     
+    public func transparet() {
+        self.backgroundColor = .clear
+        self.qmui_borderPosition = QMUIViewBorderPosition(rawValue: 0)
+    }
+    
+    public func reset() {
+        self.backgroundColor = .white
+        self.qmui_borderPosition = .bottom
+    }
+    
 }
