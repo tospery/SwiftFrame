@@ -17,16 +17,10 @@ open class BaseViewController: UIViewController {
     public var disposeBag = DisposeBag()
     public let navigator: NavigatorType
     
+    public var loading = false
+    public var error: Error?
+    
     var contentTop: CGFloat {
-        
-//            CGFloat value = 0;
-//            UINavigationBar *navBar = self.navigationController.navigationBar;
-//            if ((navBar && !navBar.hidden) || !self.reactor.hidesNavigationBar) {
-//                value += BZMNavContentTopConstant;
-//            }
-//            return value;
-        
-        
         var height = statusBarHeightConstant
         if let navBar = self.navigationController?.navigationBar, !navBar.isHidden {
             height += navBar.height
@@ -47,19 +41,20 @@ open class BaseViewController: UIViewController {
     }
     
     lazy var backBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage.qmui_image(with: .navBack, size: CGSize(width: 10, height: 18), lineWidth: 1.5, tintColor: UIColor.red), style: .plain, target: nil, action: nil)
+        return UIBarButtonItem(image: UIImage.back.qmui_image(withTintColor: .red), style: .plain, target: nil, action: nil)
     }()
-    
+
     lazy var closeBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(image: UIImage.qmui_image(with: .navClose, size: CGSize(width: 15, height: 15), lineWidth: 1.5, tintColor: UIColor.red), style: .plain, target: nil, action: nil)
+        let abc = UIImage.close
+        return UIBarButtonItem(image: UIImage.close.qmui_image(withTintColor: .red), style: .plain, target: nil, action: nil)
     }()
     
-    public lazy var navigationBar: NavigationBar = {
-        let navigationBar = NavigationBar()
-        //navigationBar.layer.zPosition = .greatestFiniteMagnitude
-        navigationBar.sizeToFit()
-        return navigationBar
-    }()
+//    public lazy var navigationBar: NavigationBar = {
+//        let navigationBar = NavigationBar()
+//        //navigationBar.layer.zPosition = .greatestFiniteMagnitude
+//        navigationBar.sizeToFit()
+//        return navigationBar
+//    }()
     
     // MARK: - Init
     public init(_ navigator: NavigatorType, _ reactor: BaseViewReactor) {
@@ -82,36 +77,56 @@ open class BaseViewController: UIViewController {
         self.extendedLayoutIncludesOpaqueBars = true
         self.automaticallyAdjustsScrollViewInsets = false
         
-        self.navigationController?.navigationBar.isHidden = true
-        self.view.addSubview(self.navigationBar)
-        
         if self.navigationController?.viewControllers.count ?? 0 > 1 {
-            let backButton = self.navigationBar.addBackButtonToLeft()
-            backButton.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
-                guard let `self` = self else { return }
-                self.navigationController?.popViewController()
-            }).disposed(by: self.disposeBag)
+            self.navigationItem.leftBarButtonItem = self.backBarItem
         } else {
-            if self.presentingViewController != nil {
-                let closeButton = self.navigationBar.addCloseButtonToLeft()
-                closeButton.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
-                    guard let `self` = self else { return }
-                    self.dismiss(animated: true, completion: nil)
-                }).disposed(by: self.disposeBag)
+            if self.qmui_isPresented() {
+                self.navigationItem.leftBarButtonItem = self.closeBarItem
+            } else {
+                self.navigationItem.leftBarButtonItem = nil
             }
         }
+        
+//        self.navigationController?.navigationBar.isHidden = true
+//        self.view.addSubview(self.navigationBar)
+        
+//        if self.navigationController?.viewControllers.count ?? 0 > 1 {
+//            let backButton = self.navigationBar.addBackButtonToLeft()
+//            backButton.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
+//                guard let `self` = self else { return }
+//                self.navigationController?.popViewController()
+//            }).disposed(by: self.disposeBag)
+//        } else {
+//            if self.presentingViewController != nil {
+//                let closeButton = self.navigationBar.addCloseButtonToLeft()
+//                closeButton.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
+//                    guard let `self` = self else { return }
+//                    self.dismiss(animated: true, completion: nil)
+//                }).disposed(by: self.disposeBag)
+//            }
+//        }
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.view.bringSubviewToFront(self.navigationBar)
+        //self.view.bringSubviewToFront(self.navigationBar)
     }
     
     // MARK: - Method
     public func bind(reactor: BaseViewReactor) {
         // reactor.viewController = self
-        self.navigationBar.isHidden = reactor.hidesNavigationBar
-        self.navigationBar.qmui_borderLayer?.isHidden = reactor.hidesNavBottomLine
+        //self.navigationBar.isHidden = reactor.hidesNavigationBar
+        //self.navigationBar.qmui_borderLayer?.isHidden = reactor.hidesNavBottomLine
+        
+        // bind
+        self.backBarItem.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
+            guard let `self` = self else { return }
+            self.navigationController?.popViewController()
+        }).disposed(by: self.disposeBag)
+        self.closeBarItem.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
+            guard let `self` = self else { return }
+            self.dismiss(animated: true, completion: nil)
+        }).disposed(by: self.disposeBag)
     }
     
 //    public func addNavigationBar() {

@@ -10,6 +10,10 @@ import QMUIKit
 
 public extension UIView {
     
+    var borderLayer: BorderLayer? {
+        return self.layer as? BorderLayer
+    }
+    
     var top: CGFloat {
         get {
             return self.qmui_top

@@ -28,21 +28,25 @@ final public class NetworkProvider<Target> where Target: Moya.TargetType {
     }
 
     public func request(_ token: Target) -> Observable<Moya.Response> {
-        let actualRequest = self.provider.rx.request(token)
-        return self.network.ignore(value: false).take(1).flatMap({ _ in
-            return actualRequest/*.delay(DispatchTimeInterval.seconds(3), scheduler: MainScheduler.instance)*/.filterSuccessfulStatusCodes().do(onSuccess: { (response) in
-            }, onError: { (error) in
-                if let error = error as? MoyaError {
-                    switch error {
-                    case .statusCode(let response):
-                        if response.statusCode == 401 {
-                            // Unauthorized AuthManager.removeToken()
-                        }
-                    default: break
-                    }
-                }
-            })
-        })
+//        let actualRequest = self.provider.rx.request(token)
+//        return self.network.ignore(value: false).take(1).flatMap({ _ in
+//            return actualRequest.filterSuccessfulStatusCodes().do(onSuccess: { (response) in
+//
+//            }, onError: { (error) in
+//                if let error = error as? MoyaError {
+//                    switch error {
+//                    case .statusCode(let response):
+//                        if response.statusCode == 401 {
+//                            // Unauthorized AuthManager.removeToken()
+//                        }
+//                    default: break
+//                    }
+//                }
+//            })
+//        })
+        
+        // YJX_TODO 无网重试
+        return self.provider.rx.request(token).asObservable()
     }
 }
 
